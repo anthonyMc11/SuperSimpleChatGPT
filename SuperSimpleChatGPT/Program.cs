@@ -32,7 +32,7 @@ namespace SuperSimpleChatGPT
                         }
                     };
                     var response = client.GetChatCompletion(request);
-                    tokensUsedinSession += response.Result.Usage.TotalTokens;
+                    tokensUsedInSession += response.Result.Usage.TotalTokens;
                     Console.WriteLine(response.Result.Choices.First().Message.Content);
                 }
             }
