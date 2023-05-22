@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using SuperSimpleChatGPT.Models;
 
 namespace SuperSimpleChatGPT
@@ -13,14 +14,20 @@ namespace SuperSimpleChatGPT
             Console.WriteLine("##You will need your own personal access token to use this");
             Console.WriteLine("##to get one go to here: https://platform.openai.com/account/api-keys");
             Console.WriteLine("##Go here to check your usage: https://platform.openai.com/account/usage");
-            Console.WriteLine("Give me your access token");
-            var token = Console.ReadLine();
+            string token = "";
+            while (string.IsNullOrWhiteSpace(token))
+            {
+                Console.WriteLine("Give me your access token");
+                token = Console.ReadLine();
+            }
 
             var client = new ChatClient(token);
             var tokensUsedInSession = 0;
+            Console.WriteLine($"Thanks, how can I help you today?");
+
             while (true)
             {
-                Console.WriteLine($"Thanks, how can I help you today? You have used {tokensUsedInSession} in this session");
+                Console.Write("YOU:");
                 var userInput = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(userInput))
                 {
@@ -33,7 +40,9 @@ namespace SuperSimpleChatGPT
                     };
                     var response = client.GetChatCompletion(request);
                     tokensUsedInSession += response.Result.Usage.TotalTokens;
-                    Console.WriteLine(response.Result.Choices.First().Message.Content);
+                    Console.WriteLine("GPT:" + response.Result.Choices.First().Message.Content);
+                    Console.WriteLine($"(You have used {tokensUsedInSession} tokens in this session)");
+
                 }
             }
         }
